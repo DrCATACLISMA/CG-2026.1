@@ -3,6 +3,7 @@
 #include "ray.hpp"
 
 #include <iostream>
+#include <fstream>
 
 // renderizando um gradiente
 color ray_color(const ray& r) {
@@ -20,6 +21,9 @@ color ray_color(const ray& r) {
 }
 
 int main() {
+
+    // criação de objeto da imagem
+    std::ofstream imagem{"imagem_CG.ppm"};
 
     // proporção da imagem
     double aspect_ratio = 16.0 / 9.0;
@@ -69,7 +73,7 @@ int main() {
     // viewport_upper_left é o canto do pixel, não o centro.
     // lançar o raio pelo centro do pixel
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    imagem << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
@@ -81,7 +85,7 @@ int main() {
             ray r{camera_center, ray_direction}; // construtor
 
             color pixel_color = ray_color(r);
-            write_color(std::cout, pixel_color);
+            write_color(imagem, pixel_color);
         }
     }
 
