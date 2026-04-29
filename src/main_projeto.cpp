@@ -5,21 +5,33 @@
 #include <iostream>
 #include <fstream>
 
-bool hit_sphere(const point3 &center, double radius, const ray &r)
+double hit_sphere(const point3 &center, double radius, const ray &r)
 {
     vec3 oc = center - r.origin();              // vetor da origem ate o centro
     auto a = dot(r.direction(), r.direction()); // coeficientes da equação
     auto b = -2.0 * dot(r.direction(), oc);
     auto c = dot(oc, oc) - radius * radius;
     auto discriminant = b * b - 4 * a * c; // discriminante da equação
-    return (discriminant >= 0);
+
+    if (discriminant < 0)
+    { // raio não atinge a esfera
+        return -1.0;
+    }
+    else
+    {
+        return (-b - std::sqrt(discriminant)) / (2.0 * a); // retorna onde atingiu a esfera
+    }
 }
 
 // renderizando um gradiente
 color ray_color(const ray &r)
 {
-    if (hit_sphere(point3(0, 0, -1), 0.5, r)) // se o raio atingir a esfera, retorna vermelho
-        return color(1, 0, 0);
+    auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
+    if (t > 0.0)
+    {
+        vec3 N = unit_vector(r.at(t) - vec3(0, 0, -1));      // calculo da normal
+        return 0.5 * color(N.x() + 1, N.y() + 1, N.z() + 1); // calcula a cor do pixel dependendo da normal
+    }
 
     // unit_vector -> função para a transformação de vetor para o unitario
     // r.direction -> getter com retorno da direção do raio
