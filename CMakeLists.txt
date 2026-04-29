@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 
 project(raytracing)
 
-file(GLOB_RECURSE SRC CONFIGURE_DEPENDS "./src/*.cpp")
 file(GLOB_RECURSE ARQUIVOS
      [CONFIGURE_DEPENDS]
      "${CMAKE_SOURCE_DIR}/src/*.cpp")
