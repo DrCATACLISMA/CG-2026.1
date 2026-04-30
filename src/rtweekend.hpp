@@ -25,8 +25,9 @@ inline double degrees_to_radians(double degrees)
 
 // Bibliotecas
 
-#include "vector.hpp"
 #include "color.hpp"
+#include "interval.hpp"
 #include "ray.hpp"
+#include "vector.hpp"
 
 #endif
