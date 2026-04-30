@@ -1,36 +1,17 @@
-#include "color.hpp"
-#include "vector.hpp"
-#include "ray.hpp"
-
-#include <iostream>
+#include "rtweekend.hpp"
+#include "hittable.hpp"
+#include "hittable_list.hpp"
+#include "sphere.hpp"
 #include <fstream>
 
-double hit_sphere(const point3 &center, double radius, const ray &r)
-{
-    vec3 oc = center - r.origin();           // vetor da origem ate o centro
-    auto a = r.direction().length_squared(); // coeficientes da equação
-    auto h = dot(r.direction(), oc);
-    auto c = oc.length_squared() - radius * radius;
-    auto discriminant = h * h - a * c; // discriminante da equação
-
-    if (discriminant < 0)
-    { // raio não atinge a esfera
-        return -1.0;
-    }
-    else
-    {
-        return (h - std::sqrt(discriminant)) / a; // retorna onde atingiu a esfera
-    }
-}
 
 // renderizando um gradiente
-color ray_color(const ray &r)
+color ray_color(const ray &r, const hittable &world)
 {
-    auto t = hit_sphere(point3(0, 0, -1), 0.5, r);
-    if (t > 0.0)
+    hit_record rec;
+    if (world.hit(r, 0, infinity, rec))
     {
-        vec3 N = unit_vector(r.at(t) - vec3(0, 0, -1));      // calculo da normal
-        return 0.5 * color(N.x() + 1, N.y() + 1, N.z() + 1); // calcula a cor do pixel dependendo da normal
+        return 0.5 * (rec.normal + color(1, 1, 1));
     }
 
     // unit_vector -> função para a transformação de vetor para o unitario
@@ -58,6 +39,12 @@ int main()
     // calculo do tamanho da imagem, deve ser pelo menos 1
     int image_height = int(image_width / aspect_ratio);
     image_height = (image_height < 1) ? 1 : image_height;
+
+    // Globais
+    hittable_list world;
+
+    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     double focal_length = 1.0;
     // altura viewport
@@ -111,7 +98,7 @@ int main()
             auto ray_direction = pixel_center - camera_center;
             ray r{camera_center, ray_direction}; // construtor
 
-            color pixel_color = ray_color(r);
+            color pixel_color = ray_color(r, world);
             write_color(imagem, pixel_color);
         }
     }

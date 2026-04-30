@@ -2,13 +2,13 @@
 #define COLOR_H
 
 #include "vector.hpp"
-
-#include <iostream>
+#include "rtweekend.hpp"
 
 // alias
 using color = vec3;
 
-void write_color(std::ostream& out, const color& pixel_color) {
+void write_color(std::ostream &out, const color &pixel_color)
+{
 
     // uso dos getters x, y e z do vector_func, retorno das componentes
     auto r = pixel_color.x();

@@ -2,7 +2,7 @@
 #define SPHERE_H
 
 #include "hittable.hpp"
-#include "vector.hpp"
+#include "rtweekend.hpp"
 
 class sphere : public hittable
 {
@@ -11,19 +11,18 @@ public:
 
     bool hit(const ray &r, double ray_tmin, double ray_tmax, hit_record &rec) const override
     {
-        vec3 oc = center - r.origin(); // vetor da origem ate o centro
+        vec3 oc = center - r.origin();           // vetor da origem ate o centro
         auto a = r.direction().length_squared(); // coeficientes da equação
         auto h = dot(r.direction(), oc);
-        auto h = dot(r.direction(), oc);
-        auto c = oc.length_squared() - radius * radius; 
+        auto c = oc.length_squared() - radius * radius;
 
         auto discriminant = h * h - a * c; // discriminante da equação
-        if (discriminant < 0) // nao atingiu a esfera
+        if (discriminant < 0)              // nao atingiu a esfera
             return false;
 
         auto sqrtd = std::sqrt(discriminant);
 
-        //PERGUNTAR PARA O RENER
+        // PERGUNTAR PARA O RENER
         auto root = (h - sqrtd) / a;
         if (root <= ray_tmin || ray_tmax <= root)
         {
