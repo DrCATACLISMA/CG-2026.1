@@ -4,6 +4,12 @@
 #include "hittable.hpp"
 #include <fstream>
 
+/*
+    Terefas importantes:
+        Construir e enviar raios para o mundo.
+        Utilizar os resultados desses raios para construir a imagem renderizada
+*/
+
 class camera
 {
 public:
@@ -109,7 +115,6 @@ private:
         auto a = 0.5 * (unit_direction.y() + 1.0);
 
         // retorna uma cor
-        // ===== PERGUNTAR PARA O RENER
         return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
     }
 };

@@ -6,6 +6,8 @@
 #include <limits>
 #include <memory>
 
+// CONTANTES
+
 // C++ Std
 
 using std::make_shared;

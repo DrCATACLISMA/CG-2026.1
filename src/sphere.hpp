@@ -22,19 +22,18 @@ public:
 
         auto sqrtd = std::sqrt(discriminant);
 
-        // PERGUNTAR PARA O RENER
-        auto root = (h - sqrtd) / a;
-        if (!ray_t.surrounds(root))
+        auto root = (h - sqrtd) / a; // Calcula a menor raiz (mais próxima da câmera)
+        if (!ray_t.surrounds(root)) // Verifica se essa raiz está dentro do intervalo válido de t
         {
-            root = (h + sqrtd) / a;
-            if (!ray_t.surrounds(root))
-                return false;
+            root = (h + sqrtd) / a; // Se a menor não serve, tenta a segunda raiz (mais distante)
+            if (!ray_t.surrounds(root)) // Se nenhuma das duas está no intervalo:
+                return false; // Não houve hit
         }
 
-        rec.t = root;
-        rec.p = r.at(rec.t);
-        vec3 outward_normal = (rec.p - center) / radius;
-        rec.set_face_normal(r, outward_normal);
+        rec.t = root;  // t é o parâmetro do raio na equação, escalar
+        rec.p = r.at(rec.t); // calculo do ponto exato no espaço onde o raio atingiu a esfera
+        vec3 outward_normal = (rec.p - center) / radius; // calculo da normal da esfera no ponto de contato
+        rec.set_face_normal(r, outward_normal); //Garante que a normal sempre aponte contra o raio
 
         return true;
     }
