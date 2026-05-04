@@ -4,11 +4,38 @@
 #include "hittable.hpp"
 #include <fstream>
 
+// fov, nx, ny, look_at, up
+
 /*
     Terefas importantes:
         Construir e enviar raios para o mundo.
         Utilizar os resultados desses raios para construir a imagem renderizada
 */
+
+/*
+    fov: 
+        double focal_length = 1.0;
+    olho e:
+        point3 camera_center = point3(0, 0, 0);
+    ny:
+        double viewport_height = 2.0;
+    nx:
+        double viewport_width;
+    up:
+        vec3 viewport_v;
+    look_at:
+
+*/
+
+struct camera_parameters
+{
+    double fov;
+    point3 eye_e{0,0,0}; // valor padrão
+    double ny;
+    double nx = -1;
+    vec3 u;
+    // look_at
+};
 
 class camera
 {
@@ -17,10 +44,10 @@ public:
     double aspect_ratio = 1.0;
     int image_width = 100;
 
-    void render(const hittable &world)
+    void render(const hittable &world, camera_parameters camp)
     {
 
-        initialize();
+        initialize(camp);
         // criação de objeto da imagem
         std::ofstream imagem{"imagem_CG.ppm"};
 
@@ -52,19 +79,33 @@ private:
     vec3 pixel_delta_u;
     vec3 pixel_delta_v;
 
-    void initialize()
+    void initialize(camera_parameters camp)
     {
         // calculo do tamanho da imagem, deve ser pelo menos 1
         image_height = int(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
 
-        camera_center = point3(0, 0, 0);
+        // olho e
+        // ANTIGO: camera_center = point3(0, 0, 0);
 
-        auto focal_length = 1.0;
+        camera_center = camp.eye_e;
+
+        // fov
+        // ANTIGO: auto focal_length = 1.0;
+        auto focal_length = camp.fov;
         // altura viewport
-        auto viewport_height = 2.0;
+        // ANTIGO: auto viewport_height = 2.0; // ny
+        auto viewport_height = camp.ny;
         // largura viewport
-        auto viewport_width = viewport_height * (double(image_width) / image_height);
+
+        double viewport_width;
+
+        if (camp.nx == -1)
+            viewport_width = viewport_height * (double(image_width) / image_height); // nx
+        else
+            viewport_width = camp.nx;
+        
+        // auto viewport_width = viewport_height * (double(image_width) / image_height); // nx
 
         // largura e altura da tela, percorre pixel por pixel, orientação da imagem
         auto viewport_u = vec3(viewport_width, 0, 0);
@@ -73,6 +114,8 @@ private:
         // calcula o tamanho do pixel no espaço 3D
         pixel_delta_u = viewport_u / image_width;
         pixel_delta_v = viewport_v / image_height;
+
+        // viewport_v é o up
 
         // calcula a posição do canto superior esquerdo da viewport
         auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
