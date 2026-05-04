@@ -13,7 +13,7 @@
 */
 
 /*
-    fov: 
+    fov:
         double focal_length = 1.0;
     olho e:
         point3 camera_center = point3(0, 0, 0);
@@ -30,17 +30,17 @@
 struct camera_parameters
 {
     double fov;
-    point3 eye_e{0,0,0}; // valor padrão
+    point3 eye_e{0, 0, 0}; // valor padrão
     double ny;
     double nx = -1;
-    vec3 u;
-    // look_at
+    // vec3 u;
+    //  look_at
 };
 
 class camera
 {
 public:
-    // proporção da imagem
+    // proporção da imagem padrao
     double aspect_ratio = 1.0;
     int image_width = 100;
 
@@ -82,7 +82,7 @@ private:
     void initialize(camera_parameters camp)
     {
         // calculo do tamanho da imagem, deve ser pelo menos 1
-        image_height = int(image_width / aspect_ratio);
+        image_height = int(image_width / aspect_ratio); // calculo do ny usando o aspect e o nx
         image_height = (image_height < 1) ? 1 : image_height;
 
         // olho e
@@ -104,7 +104,7 @@ private:
             viewport_width = viewport_height * (double(image_width) / image_height); // nx
         else
             viewport_width = camp.nx;
-        
+
         // auto viewport_width = viewport_height * (double(image_width) / image_height); // nx
 
         // largura e altura da tela, percorre pixel por pixel, orientação da imagem
