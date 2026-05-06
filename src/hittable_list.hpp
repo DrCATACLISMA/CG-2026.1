@@ -21,6 +21,7 @@ public:
 
     void clear() { objects.clear(); }
 
+    // adição de um objeto atingivel
     void add(shared_ptr<hittable> object)
     {
         objects.push_back(object);
@@ -34,6 +35,7 @@ public:
 
         for (const auto &object : objects) // loop de objetos
         {
+            // intervalo recebe o min e max do ray_t que é da classe intervalo
             if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec)) // teste de interseção
             {
                 hit_anything = true;

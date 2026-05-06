@@ -39,7 +39,9 @@ public:
     static const interval empty, universe;
 };
 
+// nada dentro
 const interval interval::empty = interval(+infinity, -infinity);
+// tudo dentro
 const interval interval::universe = interval(-infinity, +infinity);
 
 #endif

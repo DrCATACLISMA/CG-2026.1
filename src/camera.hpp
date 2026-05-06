@@ -41,8 +41,22 @@ class camera
 {
 public:
     // proporção da imagem padrao
-    double aspect_ratio = 1.0;
+    double aspect_ratio = 1.0; 
+    /*
+        representa a proporção ideal, PODE NÃO SER A PROPORÇÃO REAL
+        entre image_width e image_height
+
+        `y` image_heighté arredondado para baixo para o inteiro mais próximo, o que pode aumentar a proporção.
+        não permitimos image_heightque `y` seja menor que um, o que também pode alterar a proporção real.
+        
+    */
     int image_width = 100;
+
+    /*
+        valores padrões
+        double aspect_ratio = 16.0/9.0;
+        int image_width = 400;
+    */
 
     void render(const hittable &world, camera_parameters camp)
     {
@@ -58,7 +72,7 @@ public:
         {
             std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++)
-            { // perguntar para o Rener
+            {
                 // pixel00_loc é a posição do primeiro pixel, pixel_delta_u e pixel_delta_v espaço entre os pixels
                 auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
                 auto ray_direction = pixel_center - camera_center;
@@ -108,6 +122,14 @@ private:
         // auto viewport_width = viewport_height * (double(image_width) / image_height); // nx
 
         // largura e altura da tela, percorre pixel por pixel, orientação da imagem
+        /*
+            VETORES:
+            Vu: viewport_u
+            Vv: viewport_v
+
+            Vu: esquerda para direita
+            Vv: superior para inferior
+        */
         auto viewport_u = vec3(viewport_width, 0, 0);
         auto viewport_v = vec3(0, -viewport_height, 0);
 

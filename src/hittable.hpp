@@ -20,7 +20,7 @@ public:
     /*
       detectar de que lado o raio veio
         se < 0 → ângulo > 90° → vetores em sentidos opostos
-        se > 0 → vetores “apontam parecido”
+        se > 0 → vetores “apontam parecido”, raio dentro da esfera
     */
     normal = front_face ? outward_normal : -outward_normal; // ajuste da normal
     /*

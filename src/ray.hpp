@@ -13,7 +13,7 @@ class ray {
 		// IMPORTANTE !!!
 		/*
 		const: não pode modificar
-		& passa o endereço, NÃO A COPIA
+		& passa o endereço,
 		*/ 
 		ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
 		// INICIALIZAÇÃO
