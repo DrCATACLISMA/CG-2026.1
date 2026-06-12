@@ -105,20 +105,25 @@ private:
         camera_center = camp.eye_e;
 
         // fov
-        // ANTIGO: auto focal_length = 1.0;
-        auto focal_length = camp.fov;
+        auto focal_length = 1.0;
+        // MUDADO PARA O ANTIGO !!! <-----
+        // auto focal_length = camp.fov;
         // altura viewport
         // ANTIGO: auto viewport_height = 2.0; // ny
-        auto viewport_height = camp.ny;
-        // largura viewport
 
-        double viewport_width;
+        // Converter o FOV (em graus) para radianos <---- SUJEITO A DELEÇÃO!!!
+        auto theta = degrees_to_radians(camp.fov); 
+        auto h = std::tan(theta / 2.0);
 
-        if (camp.nx == -1)
-            viewport_width = viewport_height * (double(image_width) / image_height); // nx
-        else
-            viewport_width = camp.nx;
+        auto viewport_height = 2.0 * h * focal_length;
+        auto viewport_width = viewport_height * (double(image_width) / image_height);
 
+        /*
+                    if (camp.nx == -1)
+                        viewport_width = viewport_height * (double(image_width) / image_height); // nx
+                    else
+                        viewport_width = camp.nx;
+        */
         // auto viewport_width = viewport_height * (double(image_width) / image_height); // nx
 
         // largura e altura da tela, percorre pixel por pixel, orientação da imagem
@@ -130,6 +135,8 @@ private:
             Vu: esquerda para direita
             Vv: superior para inferior
         */
+
+        // -------------------------------------------------
         auto viewport_u = vec3(viewport_width, 0, 0);
         auto viewport_v = vec3(0, -viewport_height, 0);
 

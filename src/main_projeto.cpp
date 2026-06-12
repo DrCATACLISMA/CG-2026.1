@@ -18,18 +18,13 @@ int main()
     // int vec_u[3];
 
     // cena 
-    // world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));      // centro (i, j, k), raio
-    // // world.add(make_shared<sphere>(point3(0, -100.5, -1), 100)); // esfera verde grande, chão
-    // world.add(make_shared<sphere>(point3(-1, 0, -1), 0.2));
-    // world.add(make_shared<sphere>(point3(0, 0, -6), 2));
-    // world.add(make_shared<sphere>(point3(-2, 0, -0.78), 0.4));
-    // world.add(make_shared<sphere>(point3(2, 0, -1.3), 0.6));
-    // world.add(make_shared<sphere>(point3(3, 0, -2), 0.8))
-
-    // world.add(make_shared<sphere>(point3(0, 0, 1), 0.5));
-    world.add(make_shared<sphere>(point3(0, 0, -0.8), 0.5));
-    world.add(make_shared<sphere>(point3(0, 0.6, -0.8), 0.5));
-    // world.add(make_shared<sphere>(point3(0, 3, -0.4), 2));
+    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));      // centro (i, j, k), raio
+    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100)); // esfera verde grande, chão
+    world.add(make_shared<sphere>(point3(-1, 0, -1), 0.2));
+    world.add(make_shared<sphere>(point3(0, 0, -6), 2));
+    world.add(make_shared<sphere>(point3(-2, 0, -0.78), 0.4));
+    world.add(make_shared<sphere>(point3(2, 0, -1.3), 0.6));
+    world.add(make_shared<sphere>(point3(3, 0, -2), 0.8));
 
     //// world.add(make_shared<sphere>(point3(-1, 0, -3), 0.75));
     // world.add(make_shared<sphere>(point3(1, 6, -1), 0.55));
