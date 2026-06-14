@@ -3,13 +3,16 @@
 
 #include "hittable.hpp"
 #include "rtweekend.hpp"
+#include "material.hpp"
 
 class triangle : public hittable
 {
 public:
     vec3 v0, v1, v2;
+    shared_ptr<material> mat;
 
-    triangle(const point3 &a, const point3 &b, const point3 &c) : v0(a), v1(b), v2(c) {}
+    triangle(const point3 &a, const point3 &b, const point3 &c, shared_ptr<material> m)
+        : v0(a), v1(b), v2(c), mat(m) {}
 
     bool hit(const ray &r, interval ray_t, hit_record &rec) const override
     {
@@ -52,6 +55,7 @@ public:
         // A normal do triângulo é perpendicular aos seus dois lados
         vec3 outward_normal = unit_vector(cross(edge1, edge2));
         rec.set_face_normal(r, outward_normal);
+        rec.mat = mat;
 
         return true;
     }

@@ -2,6 +2,9 @@
 #define HITTABLE_H
 
 #include "rtweekend.hpp"
+#include "material.hpp"
+
+class material;
 
 class hit_record
 {
@@ -10,6 +13,7 @@ public:
   vec3 normal;
   double t;
   bool front_face;
+  shared_ptr<material> mat;
 
   void set_face_normal(const ray &r, const vec3 &outward_normal) // garante que a normal da superfície sempre aponte contra o raio
   {

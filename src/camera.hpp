@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include "hittable.hpp"
+#include "material.hpp"
 #include <fstream>
 #include <vector>
 
@@ -213,10 +214,10 @@ private:
             color luz_ambiente_global(1.0, 1.0, 1.0);
 
             // Propriedades do Material (Aplicado a todas as esferas por enquanto)
-            color Ka(0.1, 0.1, 0.1); // Constante Ambiente
-            color Kd(0.2, 0.5, 0.8); // Constante Difusa (Um tom de azul agradável)
-            color Ks(0.8, 0.8, 0.8); // Constante Especular (Brilho branco)
-            double shininess = 64.0; // Concentração do brilho (n)
+            color Ka = rec.mat->Ka;  // Constante Ambiente
+            color Kd = rec.mat->Kd;  // Constante Difusa (Um tom de azul agradável)
+            color Ks = rec.mat->Ks;  // Constante Especular (Brilho branco)
+            double shininess = rec.mat->shininess; // Concentração do brilho (n)
             color emissao(0, 0, 0);  // I_E
 
             // --- 2. CÁLCULO BASE ---

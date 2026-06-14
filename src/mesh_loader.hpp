@@ -4,13 +4,17 @@
 #include "rtweekend.hpp"
 #include "hittable_list.hpp"
 #include "triangle.hpp"
+#include "material.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 
 // Esta função lê um arquivo OBJ e adiciona todos os triângulos à lista de objetos da cena
-inline bool load_obj(const std::string& filename, hittable_list& world, vec3 offset = vec3(0,0,0), double scale = 1.0) {
+inline bool load_obj(const std::string &filename, hittable_list &world,
+                     shared_ptr<material> mat, // <--- ADICIONADO
+                     vec3 offset = vec3(0, 0, 0), double scale = 1.0)
+{
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Erro: Não foi possível abrir o arquivo " << filename << "\n";
@@ -50,10 +54,10 @@ inline bool load_obj(const std::string& filename, hittable_list& world, vec3 off
 
             // Adiciona o triângulo à cena
             world.add(make_shared<triangle>(
-                vertices[v_idx[0]], 
-                vertices[v_idx[1]], 
-                vertices[v_idx[2]]
-            ));
+                vertices[v_idx[0]],
+                vertices[v_idx[1]],
+                vertices[v_idx[2]],
+                mat));
         }
     }
 
