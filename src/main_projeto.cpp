@@ -3,6 +3,7 @@
 #include "hittable.hpp"
 #include "hittable_list.hpp"
 #include "sphere.hpp"
+#include "mesh_loader.hpp"
 #include <fstream>
 
 int main()
@@ -17,6 +18,28 @@ int main()
     int vec_e[3];
     // int vec_u[3];
 
+    // --- CONSTRUINDO UMA PIRÂMIDE MANUALMENTE ---
+
+        // 1. Definindo os vértices no espaço 3D
+        // Vamos colocar a pirâmide afastada da câmera no eixo Z, e com a base no eixo Y = 0
+        point3 topo(0.0, 1.5, -2.0);
+
+        point3 base_frente_esq(-1.0, 0.0, -1.0);
+        point3 base_frente_dir( 1.0, 0.0, -1.0);
+        point3 base_tras_dir( 1.0, 0.0, -3.0);
+        point3 base_tras_esq(-1.0, 0.0, -3.0);
+
+        // 2. Montando as paredes laterais (4 triângulos)
+        // Nota: A ordem dos pontos (sentido anti-horário) dita para onde a Normal vai apontar.
+        world.add(make_shared<triangle>(base_frente_dir, base_frente_esq, topo)); // Frente
+        world.add(make_shared<triangle>(base_tras_dir, base_frente_dir, topo));   // Direita
+        world.add(make_shared<triangle>(base_tras_esq, base_tras_dir, topo));     // Trás
+        world.add(make_shared<triangle>(base_frente_esq, base_tras_esq, topo));   // Esquerda
+
+        // 3. Montando a base quadrada (2 triângulos)
+        world.add(make_shared<triangle>(base_frente_esq, base_frente_dir, base_tras_dir));
+        world.add(make_shared<triangle>(base_frente_esq, base_tras_dir, base_tras_esq));
+
     // cena 
     world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));      // centro (i, j, k), raio
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100)); // esfera verde grande, chão
@@ -25,6 +48,8 @@ int main()
     world.add(make_shared<sphere>(point3(-2, 0, -0.78), 0.4));
     world.add(make_shared<sphere>(point3(2, 0, -1.3), 0.6));
     world.add(make_shared<sphere>(point3(3, 0, -2), 0.8));
+
+    load_obj("meu_modelo.obj", world, vec3(0, 0, -2), 1.0);
 
     //// world.add(make_shared<sphere>(point3(-1, 0, -3), 0.75));
     // world.add(make_shared<sphere>(point3(1, 6, -1), 0.55));
