@@ -72,6 +72,9 @@ public:
         // criação de objeto da imagem
         std::ofstream imagem{"imagem_CG.ppm"};
 
+        // Defina o número de amostras por pixel (quanto maior, mais suave, mas mais lento)
+        int samples_per_pixel = 30;
+
         imagem << "P3\n"
                << image_width << ' ' << image_height << "\n255\n";
 
@@ -82,13 +85,21 @@ public:
             std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++)
             {
-                // pixel00_loc é a posição do primeiro pixel, pixel_delta_u e pixel_delta_v espaço entre os pixels
-                auto pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-                auto ray_direction = pixel_center - camera_center;
-                ray r{camera_center, ray_direction}; // construtor
+                color pixel_color(0, 0, 0);
 
-                color pixel_color = ray_color(r, world, max_depth);
-                write_color(imagem, pixel_color);
+                // Substitua o loop s por este:
+                for (int s = 0; s < samples_per_pixel; ++s)
+                {
+                    // Calcula o deslocamento aleatório diretamente na posição do pixel
+                    auto pixel_sample = pixel00_loc + ((i + random_double()) * pixel_delta_u) + ((j + random_double()) * pixel_delta_v);
+
+                    auto ray_direction = pixel_sample - camera_center;
+                    ray r{camera_center, ray_direction};
+                    pixel_color += ray_color(r, world, max_depth);
+                }
+
+                //Grava a média das cores acumuladas
+                write_color(imagem, pixel_color / samples_per_pixel);
             }
         }
 
@@ -229,7 +240,7 @@ private:
             {
                 Kd = rec.mat->tex->value(rec.u, rec.v);
             } 
-            
+
             color Ks = rec.mat->Ks;  // Constante Especular (Brilho branco)
             double shininess = rec.mat->shininess; // Concentração do brilho (n)
             color Kr = rec.mat->Kr; // Reflexão
