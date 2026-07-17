@@ -75,6 +75,8 @@ public:
         imagem << "P3\n"
                << image_width << ' ' << image_height << "\n255\n";
 
+        int max_depth = 5;
+        
         for (int j = 0; j < image_height; j++)
         {
             std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
@@ -85,7 +87,7 @@ public:
                 auto ray_direction = pixel_center - camera_center;
                 ray r{camera_center, ray_direction}; // construtor
 
-                color pixel_color = ray_color(r, world);
+                color pixel_color = ray_color(r, world, max_depth);
                 write_color(imagem, pixel_color);
             }
         }
@@ -199,8 +201,12 @@ private:
         }
     */
 
-    color ray_color(const ray &r, const hittable &world) const
+    color ray_color(const ray &r, const hittable &world, int depth) const
     {
+        // Se excedeu o limite de rebatimentos, a luz do reflexo não contribui mais
+        if (depth <= 0)
+            return color(0, 0, 0);
+
         hit_record rec;
         
         // IMPORTANTE: Alterado de 0 para 0.001 para evitar o "Shadow Acne"
@@ -218,6 +224,7 @@ private:
             color Kd = rec.mat->Kd;  // Constante Difusa (Um tom de azul agradável)
             color Ks = rec.mat->Ks;  // Constante Especular (Brilho branco)
             double shininess = rec.mat->shininess; // Concentração do brilho (n)
+            color Kr = rec.mat->Kr; // Reflexão
             color emissao(0, 0, 0);  // I_E
 
             // --- 2. CÁLCULO BASE ---
@@ -264,6 +271,64 @@ private:
                     // Soma do resultado da luz atual: (Difuso + Especular) * S_L * I_L
                     cor_final += (difuso + especular) * luz.intensity * S_L;
                 }
+            }
+
+            if (rec.mat->Kt.x() > 0 || rec.mat->Kt.y() > 0 || rec.mat->Kt.z() > 0)
+            {
+                vec3 incident = unit_vector(r.direction());
+                vec3 normal = rec.normal;
+                double ior = rec.mat->ior;
+                double eta; // Razão dos índices de refração
+
+                // Verifica se estamos entrando ou saindo do objeto
+                if (dot(incident, normal) < 0)
+                {
+                    eta = 1.0 / ior; // Entrando
+                }
+                else
+                {
+                    eta = ior / 1.0;  // Saindo
+                    normal = -normal; // Inverte a normal
+                }
+
+                double cos_i = -dot(normal, incident);
+                double sin2_t = eta * eta * (1.0 - cos_i * cos_i);
+
+                // Reflexão Interna Total (TIR)
+                if (sin2_t > 1.0)
+                {
+                    // Se ocorrer reflexão total, trata apenas como reflexão
+                    vec3 reflected_dir = incident - (2.0 * dot(incident, rec.normal) * rec.normal);
+                    ray reflected_ray(rec.p, reflected_dir);
+                    cor_final += rec.mat->Kr * ray_color(reflected_ray, world, depth - 1);
+                }
+                else
+                {
+                    // Refração real (Lei de Snell)
+                    double cos_t = std::sqrt(1.0 - sin2_t);
+                    vec3 refracted_dir = eta * incident + (eta * cos_i - cos_t) * normal;
+                    ray refracted_ray(rec.p, refracted_dir);
+
+                    // Chamada recursiva para refração
+                    cor_final += rec.mat->Kt * ray_color(refracted_ray, world, depth - 1);
+                }
+            }
+
+            // --- NOVO: RECURSÃO (REFLEXÃO) ---
+            // Verifica se o material tem alguma capacidade de reflexão
+            if (Kr.x() > 0 || Kr.y() > 0 || Kr.z() > 0)
+            {
+                // Direção do raio incidente (o raio que bateu no objeto)
+                vec3 incident = unit_vector(r.direction());
+
+                // Fórmula da reflexão: R = I - 2(I • N)N
+                vec3 reflected_dir = incident - (2.0 * dot(incident, N) * N);
+
+                // Cria o novo raio a partir do ponto de colisão
+                ray reflected_ray(rec.p, reflected_dir);
+
+                // Chamada recursiva: soma a cor refletida multiplicada pela taxa de reflexão do material
+                cor_final += Kr * ray_color(reflected_ray, world, depth - 1);
             }
 
             // --- 4. PREVENÇÃO DE ESTOURO DE COR ---

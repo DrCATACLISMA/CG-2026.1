@@ -23,11 +23,31 @@ int main()
     camera_parameters cam_1;
     int vec_e[3];
 
-    // --- 1. DEFINIÇÃO DOS MATERIAIS ORIGINAIS DO SEU PROJETO ---
-    auto material_chao = make_shared<material>(color(0.1, 0.1, 0.1), color(0.2, 0.8, 0.2), color(0.1, 0.1, 0.1), 10.0);
-    auto material_azul = make_shared<material>(color(0.1, 0.1, 0.1), color(0.2, 0.5, 0.8), color(0.8, 0.8, 0.8), 64.0);
-    auto material_vermelho = make_shared<material>(color(0.1, 0.0, 0.0), color(0.8, 0.1, 0.1), color(0.9, 0.9, 0.9), 128.0);
-    auto material_ouro = make_shared<material>(color(0.2, 0.1, 0.0), color(0.8, 0.6, 0.2), color(1.0, 0.9, 0.5), 256.0);
+    // material_chao: Sem reflexo (preto 0,0,0)
+    auto material_chao = make_shared<material>(color(0.1, 0.1, 0.1), color(0.2, 0.8, 0.2), color(0.1, 0.1, 0.1), color(0, 0, 0), color(0, 0, 0), 10.0, 1.0);
+
+    // material_azul: como água
+    auto material_azul = make_shared<material>(
+        color(0.0, 0.0, 0.0),
+        color(0.0, 0.0, 0.0),
+        color(0.5, 0.5, 0.5),
+        color(0.3, 0.3, 0.3),
+        color(0.4, 0.7, 0.9),
+        64.0,
+        1.33);
+
+    // material_vermelho: Como vidro vermelho
+    auto material_vermelho = make_shared<material>(
+        color(0.0, 0.0, 0.0),
+        color(0.0, 0.0, 0.0),
+        color(0.5, 0.5, 0.5),
+        color(0.2, 0.2, 0.2),
+        color(0.95, 0.8, 0.8),
+        128.0,
+        1.5);
+
+    // material_ouro: Altamente reflexivo como um espelho dourado
+    auto material_ouro = make_shared<material>(color(0.2, 0.1, 0.0), color(0.8, 0.6, 0.2), color(1.0, 0.9, 0.5), color(0.8, 0.8, 0.5), color(0, 0, 0), 256.0, 1.0);
 
     // --- 2. OBJETOS FIXOS NO MUNDO ---
     // O chão plano gigante permanece na lista global absoluta
