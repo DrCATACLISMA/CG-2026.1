@@ -38,9 +38,15 @@ public:
         vec3 outward_normal = (rec.p - center) / radius; // calculo da normal da esfera no ponto de contato
         // hittable
         rec.set_face_normal(r, outward_normal); //Garante que a normal sempre aponte contra o raio
-        rec.mat = mat;
 
-            return true;
+        vec3 p = (rec.p - center) / radius; // Ponto unitário na esfera
+        auto phi = std::atan2(-p.z(), p.x()) + pi;
+        auto theta = std::acos(-p.y());
+        rec.u = phi / (2.0 * pi);
+        rec.v = theta / pi;
+
+        rec.mat = mat;
+        return true;
     }
 
 private:

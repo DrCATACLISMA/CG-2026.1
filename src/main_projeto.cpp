@@ -99,6 +99,24 @@ int main()
     // Ajuste a posição (vec3) e a escala (double) conforme necessário
     /*load_obj("teapot.obj", world, material_ouro, vec3(0, 0, -5), 1.0);*/
 
+    // 1. Carregue a textura
+    auto textura_parede = make_shared<texture>("parede.ppm");
+
+    // 2. Crie o material e atribua a textura
+    auto material_parede = make_shared<material>(color(0, 0, 0), color(1, 1, 1), color(0, 0, 0), color(0, 0, 0), color(0, 0, 0), 10.0, 1.0);
+    material_parede->tex = textura_parede;
+
+    // 3. Defina os pontos
+    point3 v0(0.0, 1.5, -2.0);
+    point3 v1(-1.0, 0.0, -2.0);
+    point3 v2(1.0, 0.0, -2.0);
+
+    // 4. Adicione ao mundo usando o novo construtor com UVs, TRIANGULO COM TEXTURA
+    world.add(make_shared<triangle>(
+        v0, v2, v1,
+        uv_coord{0.5, 1.0}, uv_coord{0.0, 0.0}, uv_coord{1.0, 0.0},
+        material_parede)); // triangulo com textura de parede
+
     camera cam;
 
     std::cout << "Digite o campo de visão:\n";

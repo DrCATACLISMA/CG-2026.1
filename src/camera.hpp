@@ -212,6 +212,7 @@ private:
         // IMPORTANTE: Alterado de 0 para 0.001 para evitar o "Shadow Acne"
         if (world.hit(r, interval(0.001, infinity), rec))
         {
+            
             // --- 1. DEFINIÇÕES DA CENA E MATERIAL ---
             // Luz principal posicionada no alto e à direita
             light luz_principal = { point3(5, 5, 0), color(1.0, 1.0, 1.0) };
@@ -221,7 +222,14 @@ private:
 
             // Propriedades do Material (Aplicado a todas as esferas por enquanto)
             color Ka = rec.mat->Ka;  // Constante Ambiente
-            color Kd = rec.mat->Kd;  // Constante Difusa (Um tom de azul agradável)
+                                     // Se o material tem textura, substitui a constante Kd
+            color Kd = rec.mat->Kd;  // Constante Difusa 
+
+            if (rec.mat->tex)
+            {
+                Kd = rec.mat->tex->value(rec.u, rec.v);
+            } 
+            
             color Ks = rec.mat->Ks;  // Constante Especular (Brilho branco)
             double shininess = rec.mat->shininess; // Concentração do brilho (n)
             color Kr = rec.mat->Kr; // Reflexão
