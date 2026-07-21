@@ -48,6 +48,7 @@ public:
             j = height - 1;
 
         auto pixel = &data[3 * (j * width + i)];
+
         return color(pixel[0] / 255.0, pixel[1] / 255.0, pixel[2] / 255.0);
     }
 };

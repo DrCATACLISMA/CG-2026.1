@@ -65,15 +65,20 @@ public:
         int image_width = 400;
     */
 
-    void render(const hittable &world, camera_parameters camp)
+    // Número de amostras por pixel (quanto maior, mais suave, mas mais lento).
+    // Agora é membro público para poder ser ajustado de fora (ex: menor durante testes de animação).
+    int samples_per_pixel = 30;
+
+    // Posição da luz principal da cena. Público para poder ser animada frame a frame
+    // (ex: mover a luz da direita para a esquerda ao longo do vídeo).
+    point3 posicao_luz{5, 5, 0};
+
+    void render(const hittable &world, camera_parameters camp, const std::string &filename = "imagem_CG_FINAL.ppm")
     {
 
         initialize(camp);
-        // criação de objeto da imagem
-        std::ofstream imagem{"imagem_CG.ppm"};
-
-        // Defina o número de amostras por pixel (quanto maior, mais suave, mas mais lento)
-        int samples_per_pixel = 30;
+        // criação de objeto da imagem (nome agora é parametrizável, útil para gerar frame_0000.ppm, frame_0001.ppm...)
+        std::ofstream imagem{filename};
 
         imagem << "P3\n"
                << image_width << ' ' << image_height << "\n255\n";
@@ -225,8 +230,8 @@ private:
         {
             
             // --- 1. DEFINIÇÕES DA CENA E MATERIAL ---
-            // Luz principal posicionada no alto e à direita
-            light luz_principal = { point3(5, 5, 0), color(1.0, 1.0, 1.0) };
+            // Luz principal: posição vem do membro posicao_luz (configurável/animável de fora)
+            light luz_principal = { posicao_luz, color(1.0, 1.0, 1.0) };
             std::vector<light> luzes = { luz_principal };
             
             color luz_ambiente_global(1.0, 1.0, 1.0);

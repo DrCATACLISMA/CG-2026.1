@@ -17,7 +17,7 @@ public:
     shared_ptr<texture> tex = nullptr; // Se for nulo, usa a cor base
 
     material(const color &a, const color &d, const color &s, const color &r, const color &t, double n, double i)
-        : Ka(a), Kd(d), Ks(s), Kr(r), shininess(n) {}
+        : Ka(a), Kd(d), Ks(s), Kr(r), Kt(t), shininess(n), ior(i) {}
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include "matrix4.hpp"
 #include <fstream>
 #include <memory>
+#include <iomanip>
 
 int main()
 {
@@ -19,6 +20,7 @@ int main()
     // entrada teste 180, 854, 480, 0, 0, 0
     // posicao vamera 0, 40, 100
     // Globais
+    
     hittable_list world;
     camera_parameters cam_1;
     int vec_e[3];
