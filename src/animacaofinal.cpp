@@ -103,19 +103,23 @@ int main()
         {0.0, pos_luz_fixa, easing_type::EASE_IN_OUT},
         {duracao_segundos, pos_luz_fixa, easing_type::EASE_IN_OUT}};
 
-    // ---------- 4. KEYFRAMES DA CÂMERA (Volta completa de 360 graus) ----------
-    std::vector<keyframe> kf_camera;
-    const double orbita_radius = 15.0; // Raio da órbita
-    const double orbita_height = 5.0;  // Altura da câmera
-    const int steps_camera = 8;        // Número de pontos chave (cada 45 graus) para suavizar a órbita
-    for (int i = 0; i <= steps_camera; ++i)
-    {
-        double angle_deg = (double(i) / steps_camera) * 360.0;
-        double angle_rad = degrees_to_radians(angle_deg);
-        double t_kf = (double(i) / steps_camera) * duracao_segundos;
-        kf_camera.push_back({t_kf, point3(orbita_radius * std::cos(angle_rad), orbita_height, orbita_radius * std::sin(angle_rad)), easing_type::LINEAR}); // LINEAR para manter velocidade constante
-    }
+    // ---------- 4. KEYFRAMES DA CÂMERA (Movimento em linha reta da esquerda para a direita) ----------
+    std::vector<keyframe> kf_camera = {
+        // Inicia bem à esquerda, mantendo uma boa distância frontal (z = 4.0)
+        {0.0, point3(-12.0, 3.0, 4.0), easing_type::LINEAR},
 
+        // Ponto intermediário (passando pela esquerda/centro dos objetos)
+        {1.25, point3(-4.0, 3.0, 4.0), easing_type::LINEAR},
+
+        // Ponto central (passando bem na frente do centro da cena)
+        {2.5, point3(0.0, 3.0, 4.0), easing_type::LINEAR},
+
+        // Ponto intermediário direito
+        {3.75, point3(4.0, 3.0, 4.0), easing_type::LINEAR},
+
+        // Finaliza bem à direita da cena
+        {duracao_segundos, point3(12.0, 3.0, 4.0), easing_type::LINEAR}};
+        
     // ---------- 5. MATERIAIS ----------
     // Chão: textura quadriculada (xadrez.ppm) e difusa branca
     auto textura_chao = make_shared<texture>("xadrez.ppm");
@@ -170,8 +174,8 @@ int main()
     // ---------- 6. CÂMERA (parâmetros de imagem fixos; ALTA QUALIDADE) ----------
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 400;
-    cam.samples_per_pixel = 20; // Mais amostras por pixel para melhor qualidade
+    cam.image_width = 640;
+    cam.samples_per_pixel = 10; // Mais amostras por pixel para melhor qualidade
 
     camera_parameters cam_1;
     cam_1.fov = 60;
@@ -235,7 +239,7 @@ int main()
 
         // --- Nome do arquivo ---
         std::ostringstream nome;
-        nome << "frames_animacaofinal/frame_" << std::setw(4) << std::setfill('0') << frame << ".ppm";
+        nome << "frames_final/frame_" << std::setw(4) << std::setfill('0') << frame << ".ppm";
 
         std::clog << "Frame " << frame << "/" << total_frames
                   << "  luz.x=" << pos_luz.x() << "  cam.pos=" << pos_camera.x() << "," << pos_camera.y() << "," << pos_camera.z() << "\n";

@@ -117,7 +117,10 @@ vec3 cross(const vec3 &u, const vec3 &v)
 // TRANSFORMA EM UM VETOR UNITÁRIO
 vec3 unit_vector(const vec3 &v)
 {
-    return v / v.length();
+    double len = v.length();
+    if (len < 1e-9)
+        return vec3(0, 0, 0); // Evita divisão por zero
+    return v / len;
 }
 
 #endif

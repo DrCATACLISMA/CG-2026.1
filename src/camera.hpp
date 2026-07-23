@@ -36,7 +36,7 @@ public:
 
     // Número de amostras por pixel (quanto maior, mais suave, mas mais lento).
     // Agora é membro público para poder ser ajustado de fora (ex: menor durante testes de animação).
-    int samples_per_pixel = 500; // aumento do samples per pixel
+    int samples_per_pixel = 200; // aumento do samples per pixel
 
     // Posição da luz principal da cena. Público para poder ser animada frame a frame
     // (ex: mover a luz da direita para a esquerda ao longo do vídeo).
