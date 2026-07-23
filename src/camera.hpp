@@ -6,29 +6,6 @@
 #include <fstream>
 #include <vector>
 
-// fov, nx, ny, look_at, up
-
-/*
-    Terefas importantes:
-        Construir e enviar raios para o mundo.
-        Utilizar os resultados desses raios para construir a imagem renderizada
-*/
-
-/*
-    fov:
-        double focal_length = 1.0;
-    olho e:
-        point3 camera_center = point3(0, 0, 0);
-    ny:
-        double viewport_height = 2.0;
-    nx:
-        double viewport_width;
-    up:
-        vec3 viewport_v;
-    look_at:
-
-*/
-
 struct light {
     point3 position;
     color intensity;
@@ -49,14 +26,6 @@ class camera
 public:
     // proporção da imagem padrao
     double aspect_ratio = 1.0; 
-    /*
-        representa a proporção ideal, PODE NÃO SER A PROPORÇÃO REAL
-        entre image_width e image_height
-
-        `y` image_heighté arredondado para baixo para o inteiro mais próximo, o que pode aumentar a proporção.
-        não permitimos image_heightque `y` seja menor que um, o que também pode alterar a proporção real.
-        
-    */
     int image_width = 100;
 
     /*
@@ -124,42 +93,17 @@ private:
         image_height = int(image_width / aspect_ratio); // calculo do ny usando o aspect e o nx
         image_height = (image_height < 1) ? 1 : image_height;
 
-        // olho e
-        // ANTIGO: camera_center = point3(0, 0, 0);
-
         camera_center = camp.eye_e;
 
         // fov
         auto focal_length = 1.0;
-        // MUDADO PARA O ANTIGO !!! <-----
-        // auto focal_length = camp.fov;
-        // altura viewport
-        // ANTIGO: auto viewport_height = 2.0; // ny
 
-        // Converter o FOV (em graus) para radianos <---- SUJEITO A DELEÇÃO!!!
+        // Converter o FOV (em graus) para radianos 
         auto theta = degrees_to_radians(camp.fov); 
         auto h = std::tan(theta / 2.0);
 
         auto viewport_height = 2.0 * h * focal_length;
         auto viewport_width = viewport_height * (double(image_width) / image_height);
-
-        /*
-                    if (camp.nx == -1)
-                        viewport_width = viewport_height * (double(image_width) / image_height); // nx
-                    else
-                        viewport_width = camp.nx;
-        */
-        // auto viewport_width = viewport_height * (double(image_width) / image_height); // nx
-
-        // largura e altura da tela, percorre pixel por pixel, orientação da imagem
-        /*
-            VETORES:
-            Vu: viewport_u
-            Vv: viewport_v
-
-            Vu: esquerda para direita
-            Vv: superior para inferior
-        */
 
         // -------------------------------------------------
         auto viewport_u = vec3(viewport_width, 0, 0);
@@ -173,21 +117,6 @@ private:
 
         // calcula a posição do canto superior esquerdo da viewport
         auto viewport_upper_left = camera_center - vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
-        // calcula o centro do pixel (0,0)
-        /*
-            1. COMEÇA NO CENTRO da câmera, camera_center (0,0,0)
-            2. ANDA PRA FRENTE (eixo Z negativo), - vec3(0, 0, focal_length)
-            3. VAI METADE PARA ESQUERDA,
-                - viewport_u/2
-                    Porque viewport_u vai pra direita
-                    então o negativo leva para a esquerda
-            4. VAI METADE PRA CIMA
-                - viewport_v/2
-                    Lembra: viewport_v aponta para baixo
-                    então o negativo sobe
-            5. RESULTADO:
-                VOCÊ CHEGA NO CANTO SUPERIOR ESQUERDO DA TELA
-        */
 
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
         // Calcula o centro do pixel (0,0)

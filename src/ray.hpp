@@ -7,25 +7,7 @@ class ray {
 	public:
 		ray() {}
 
-		// construtor...
-		// origin: ponto de origem do raio
-		// direction: direção do raio
-		// IMPORTANTE !!!
-		/*
-		const: não pode modificar
-		& passa o endereço,
-		*/ 
 		ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
-		// INICIALIZAÇÃO
-		/*
-			EQUIVALENTE EM C:
-			struct ray create_ray(struct vec3 origin, struct vec3 direction) {
-				struct ray r;
-				r.orig = origin;
-				r.dir  = direction;
-				return r;
-			}
-		*/
 
 		// GETTERS
 		const point3& origin() const  { return orig; }

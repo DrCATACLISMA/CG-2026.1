@@ -12,12 +12,6 @@ public:
 
     hittable_list() {}
     hittable_list(shared_ptr<hittable> object) { add(object); } 
-    /*
-        shared_ptr<type>é um ponteiro para algum tipo alocado
-        com semântica de contagem de referências.
-        incrementa quando é atribuido um valor 
-        decrementa à medida que os ponteiros compartilhados saem do escopo
-    */
 
     void clear() { objects.clear(); }
 

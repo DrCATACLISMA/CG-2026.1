@@ -12,7 +12,7 @@
 #include <memory>
 #include <iomanip>
 
-int main()
+int main() //main antigo para imagem estastica, sem animação
 {
 
     // 16:9 aspect ratio -> 1920x1080, 1280x720, 854x480, 640x360, 426x240, 256x144
@@ -93,11 +93,10 @@ int main()
     point3 base_frente_esq(-1.0, 0.0, -1.0);
     point3 base_frente_dir(1.0, 0.0, -1.0);
 
-    /*world.add(make_shared<triangle>(base_frente_dir, base_frente_esq, topo, material_azul));*/
+    world.add(make_shared<triangle>(base_frente_dir, base_frente_esq, topo, material_azul)); // gera triangulo
 
-    // demora demais para gerar o bule mas funciona
 
-    // 2. Carregue o arquivo
+    // 2. Carregue o arquivo obj opcional 
     // Ajuste a posição (vec3) e a escala (double) conforme necessário
     /*load_obj("teapot.obj", world, material_ouro, vec3(0, 0, -5), 1.0);*/
 
@@ -141,15 +140,6 @@ int main()
     }
 
     cam_1.eye_e = point3(vec_e[0], vec_e[1], vec_e[2]);
-
-    /* std::cout << "Digite o vetor u:\n";
-     for (int i = 0; i < 3; i++)
-     {
-         std::cout << "Coordenada u n" << i << ":\n";
-         std::cin >> vec_u[i];
-     }
-
-     cam_1.u = vec3(vec_u[0], vec_u[1], vec_u[2]);*/
 
     cam.render(world, cam_1);
 }

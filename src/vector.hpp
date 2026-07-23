@@ -10,15 +10,10 @@ class vec3
 public:
     double e[3];
 
-    // construtores
-    // inicialização com 0
     vec3() : e{0, 0, 0} {}
-
-    // inicialização com double e0 etc...
     vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
 
     // funções getters, componetes do vetor
-    // CONST obrigatoriamente faz a função NÃO modificar o objeto
     double x() const { return e[0]; }
     double y() const { return e[1]; }
     double z() const { return e[2]; }
@@ -27,38 +22,9 @@ public:
     // OPERADOR NEGATIVO, RETORNA AS COMPONENTES DO VETOR NEGATIVOS
     vec3 operator-() const { return vec3(-e[0], -e[1], -e[2]); }
 
-    // OPERADOR DE LEITURA
-    /*
-        vec3 v(10,20,30);
-        double x = v[0];  // 10
-
-        JAVA:
-
-        double get(int i) {
-            return e[i];
-        }
-    */
     double operator[](int i) const { return e[i]; }
-    /*
-        & significa retorne uma referência ao elemento
-
-        v[0] = 100;
-
-        v.operator[](0) → referência para e[0]
-    */
     double &operator[](int i) { return e[i]; }
 
-    /*
-        C++ diferencia
-
-        | Situação              | Função usada   |
-        | --------------------- | -------------- |
-        | leitura (`x = v[0]`)  | versão `const` |
-        | escrita (`v[0] = 10`) | versão com `&` |
-
-    */
-
-    // RETORNA O OBJETO, POR REFERENCIA
     vec3 &operator+=(const vec3 &v)
     {
         e[0] += v.e[0];
@@ -93,13 +59,8 @@ public:
     }
 };
 
-// point3 is just an alias for vec3, but useful for geometric clarity in the code.
 using point3 = vec3;
 
-// Vector Utility Functions
-
-// Impressão
-// : pode substituir direto no código, otimização
 std::ostream &operator<<(std::ostream &out, const vec3 &v)
 {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];

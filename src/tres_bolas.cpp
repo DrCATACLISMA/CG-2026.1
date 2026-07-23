@@ -14,6 +14,8 @@
 #include <cmath>
 #include <iostream>
 
+// gera animação de 3 bolas quicando em sincronia e de duas piramides, iluminação se movimenta e camera tambem
+
 // ---------- Gera os keyframes do quique de UMA bola ----------
 // x_offset: posição horizontal fixa da bola (esquerda/meio/direita)
 // z_pos: profundidade fixa da bola

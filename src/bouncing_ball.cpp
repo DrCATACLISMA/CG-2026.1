@@ -11,7 +11,7 @@
 #include <cmath>
 #include <iostream>
 
-int main()
+int main() // gera uma bola quicando
 {
     // ---------- 1. PARÂMETROS DO VÍDEO ----------
     const int fps = 30;
