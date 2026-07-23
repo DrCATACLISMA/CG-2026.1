@@ -119,7 +119,7 @@ int main()
 
         // Finaliza bem à direita da cena
         {duracao_segundos, point3(12.0, 3.0, 4.0), easing_type::LINEAR}};
-        
+
     // ---------- 5. MATERIAIS ----------
     // Chão: textura quadriculada (xadrez.ppm) e difusa branca
     auto textura_chao = make_shared<texture>("xadrez.ppm");
@@ -192,50 +192,76 @@ int main()
         point3 pos_luz = keyframe_interpolate(kf_luz, t);
         point3 pos_camera = keyframe_interpolate(kf_camera, t); // camera orbits
 
-        // --- Monta a cena deste frame ---
+        // --- Monta a cena deste frame com mais objetos em profundidades variadas ---
         hittable_list world;
-        world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, material_chao)); // chão (com textura quadriculada)
+        world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, material_chao)); // chão
 
+        // 1. Bola da Esquerda (tamanho padrão, mais próxima)
         auto bola_esquerda = make_shared<node>();
         bola_esquerda->add(make_shared<sphere>(point3(0, 0, 0), raio_bola, material_parede));
         bola_esquerda->translate(vec3(pos_esquerda.x(), pos_esquerda.y(), pos_esquerda.z()));
         bola_esquerda->update_transforms(matrix4::identity());
         world.add(bola_esquerda);
 
+        // 2. Bola do Meio (tamanho médio, mais ao fundo)
         auto bola_meio = make_shared<node>();
         bola_meio->add(make_shared<sphere>(point3(0, 0, 0), raio_bola, material_ouro));
         bola_meio->translate(vec3(pos_meio.x(), pos_meio.y(), pos_meio.z()));
         bola_meio->update_transforms(matrix4::identity());
         world.add(bola_meio);
 
+        // 3. Bola da Direita (tamanho padrão)
         auto bola_direita = make_shared<node>();
         bola_direita->add(make_shared<sphere>(point3(0, 0, 0), raio_bola, material_azul));
         bola_direita->translate(vec3(pos_direita.x(), pos_direita.y(), pos_direita.z()));
         bola_direita->update_transforms(matrix4::identity());
         world.add(bola_direita);
 
-        // --- Pirâmides invertidas, girando em torno do próprio eixo ---
-        double angulo_piramide = t * velocidade_rotacao; // graus acumulados até este instante
+        // --- NOVOS OBJETOS ADICIONAIS ---
+
+        // 4. Bola Gigante ao Fundo (uma bola bem grande e estática lá atrás)
+        auto bola_gigante_fundo = make_shared<node>();
+        bola_gigante_fundo->add(make_shared<sphere>(point3(0, 0, 0), 2.5, material_parede)); // Raio 2.5 (bem grande)
+        bola_gigante_fundo->translate(vec3(-2.0, 2.5, -12.0));                               // Bem no fundo e à esquerda
+        bola_gigante_fundo->update_transforms(matrix4::identity());
+        world.add(bola_gigante_fundo);
+
+        // 5. Bola Média Estática Adicional (no lado direito, profundidade intermediária)
+        auto bola_extra_direita = make_shared<node>();
+        bola_extra_direita->add(make_shared<sphere>(point3(0, 0, 0), 1.0, material_ouro)); // Raio maior (1.0)
+        bola_extra_direita->translate(vec3(6.5, 1.0, -6.0));
+        bola_extra_direita->update_transforms(matrix4::identity());
+        world.add(bola_extra_direita);
+
+        // 6. Bola Pequena Flutuando/Mais Próxima (para dar contraste de escala)
+        auto bola_pequena_frente = make_shared<node>();
+        bola_pequena_frente->add(make_shared<sphere>(point3(0, 0, 0), 0.4, material_azul)); // Bola menor
+        bola_pequena_frente->translate(vec3(-5.0, 0.4, -2.5));                              // Mais próxima da câmera
+        bola_pequena_frente->update_transforms(matrix4::identity());
+        world.add(bola_pequena_frente);
+
+        // --- Pirâmides invertidas originais, com posições desalinhadas ---
+        double angulo_piramide = t * velocidade_rotacao;
 
         auto piramide_esquerda = make_shared<node>();
         for (auto &tri : triangulos_piramide)
-            piramide_esquerda->add(tri);
-        piramide_esquerda->rotate_y(angulo_piramide); // gira em torno do próprio centro
+        piramide_esquerda->add(tri);
+        piramide_esquerda->rotate_y(angulo_piramide);
         piramide_esquerda->translate(vec3(x_piramide_esquerda, y_piramide, z_piramide_esquerda));
         piramide_esquerda->update_transforms(matrix4::identity());
         world.add(piramide_esquerda);
 
         auto piramide_direita = make_shared<node>();
         for (auto &tri : triangulos_piramide)
-            piramide_direita->add(tri);
+        piramide_direita->add(tri);
         piramide_direita->rotate_y(angulo_piramide);
         piramide_direita->translate(vec3(x_piramide_direita, y_piramide, z_piramide_direita));
         piramide_direita->update_transforms(matrix4::identity());
         world.add(piramide_direita);
 
         // --- Atualiza luz e câmera deste frame ---
-        cam.posicao_luz = pos_luz; // fixed position
-        cam_1.eye_e = pos_camera;  // orbiting camera position
+        cam.posicao_luz = pos_luz; // posição fixa
+        cam_1.eye_e = pos_camera;  // camera mechendo
 
         // --- Nome do arquivo ---
         std::ostringstream nome;
@@ -247,6 +273,6 @@ int main()
         cam.render(world, cam_1, nome.str());
     }
 
-    std::cout << "Todos os " << total_frames << " frames foram gerados em frames_3bolas/\n";
+    std::cout << "Todos os " << total_frames << " frames foram gerados em frames_final/\n";
     return 0;
 }
