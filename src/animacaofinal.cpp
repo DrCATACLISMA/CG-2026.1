@@ -83,10 +83,10 @@ std::vector<shared_ptr<hittable>> construir_piramide_invertida(shared_ptr<materi
 
 int main()
 {
-    
+
     // ---------- 1. PARÂMETROS DO VÍDEO ----------
     const int fps = 30;
-    const double duracao_segundos = 5.0;                  
+    const double duracao_segundos = 5.0;
     const int total_frames = int(fps * duracao_segundos); // 240 frames
     const double raio_bola = 0.6;
 
@@ -170,7 +170,7 @@ int main()
     // ---------- 6. CÂMERA (parâmetros de imagem fixos; ALTA QUALIDADE) ----------
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 400;      
+    cam.image_width = 400;
     cam.samples_per_pixel = 20; // Mais amostras por pixel para melhor qualidade
 
     camera_parameters cam_1;
@@ -235,7 +235,7 @@ int main()
 
         // --- Nome do arquivo ---
         std::ostringstream nome;
-        nome << "frames_3bolas/frame_" << std::setw(4) << std::setfill('0') << frame << ".ppm";
+        nome << "frames_animacaofinal/frame_" << std::setw(4) << std::setfill('0') << frame << ".ppm";
 
         std::clog << "Frame " << frame << "/" << total_frames
                   << "  luz.x=" << pos_luz.x() << "  cam.pos=" << pos_camera.x() << "," << pos_camera.y() << "," << pos_camera.z() << "\n";
