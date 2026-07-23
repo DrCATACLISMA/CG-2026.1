@@ -161,8 +161,8 @@ int main()
     // ---------- 6. CÂMERA (parâmetros de imagem fixos; posição vai variar por frame) ----------
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 1280;      // 1920 em vez de 1980: precisa ser PAR para o ffmpeg (altura tb sai par em 16:9)
-    cam.samples_per_pixel = 64;
+    cam.image_width = 400;      // 1920 em vez de 1980: precisa ser PAR para o ffmpeg (altura tb sai par em 16:9)
+    cam.samples_per_pixel = 20;
 
     camera_parameters cam_1;
     cam_1.fov = 60;

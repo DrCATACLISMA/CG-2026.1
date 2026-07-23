@@ -1,6 +1,6 @@
 #ifndef MATRIX4_HPP
 #define MATRIX4_HPP
-
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
